@@ -1,0 +1,33 @@
+name: Workflow for checking weather application
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: windows-latest
+    
+        steps:
+        - name: Checkout sourcode
+          uses: actions/checkout@v3
+        
+        - name: Build docker image
+          run: docker build -t weather-app .
+
+        - name: Run docker container
+          run: |
+            docker rm -f weather-app 2>/dev/null || true
+            docker run -d -p 5000:5000 --name weather-app weather-app
+            timeout /t 5
+        
+        - name: Test application
+          run: curl http://127.0.0.1:5000
+
+        - name: Clean up
+          if: always()
+          run: |
+            docker stop weather-app
+            docker rm weather-app
