@@ -21,7 +21,7 @@ jobs:
           run: |
             docker rm -f weather-app 2>/dev/null || true
             docker run -d -p 5000:5000 --name weather-app weather-app
-            timeout /t 5
+            sleep 5
         
         - name: Test application
           run: curl http://127.0.0.1:5000
