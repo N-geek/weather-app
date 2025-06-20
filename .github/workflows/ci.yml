@@ -13,7 +13,7 @@ jobs:
         steps:
         - name: Checkout sourcode
           uses: actions/checkout@v3
-          
+
         - name: Create .env file from secret
           run: |
             echo "WEATHER_API=${{ secrets.WEATHER_API }}" > .env
@@ -34,8 +34,9 @@ jobs:
         
         - name: Test application
           run: |
-            sleep 10
+            sleep 3
             curl --fail http://localhost:5000/weather?city=London
+            curl --fail http://localhost:3000
 
         - name: Clean up
           if: always()
