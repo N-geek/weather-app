@@ -27,6 +27,11 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             docker-compose version
 
+        - name: Clean up all image before create
+          run: |
+            docker stop $(docker ps -q)
+            docker rm $(docker ps -q)
+
         - name: Build docker image
           run: |
             docker-compose up --build -d
