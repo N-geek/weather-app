@@ -56,14 +56,18 @@ jobs:
           with:
             context: ./frontend
             push: true
-            tags: ngeek4geek/weather-app-frontend:latest
+            tags: |
+              ngeek4geek/weather-app-frontend:latest
+              ngeek4geek/weather-app-frontend:${{ github.sha }}
 
         - name: Build and push backend image
           uses: docker/build-push-action@v5
           with:
             context: ./backend
             push: true
-            tags: ngeek4geek/weather-app-backend:latest
+            tags: |
+              ngeek4geek/weather-app-backend:latest
+              ngeek4geek/weather-app-backend:${{ github.sha }}
 
         - name: Clean up
           if: always()

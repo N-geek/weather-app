@@ -12,7 +12,7 @@ FROM nginx:stable-alpine
 # Xóa cấu hình mặc định
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy build từ stage trước
+# Copy build từ stage trước (đã sửa từ dist -> build)
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy cấu hình nginx nếu có

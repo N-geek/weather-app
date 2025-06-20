@@ -1,0 +1,9 @@
+frontend:
+  image: ngeek4geek/weather-app-frontend:latest
+  port: 80
+
+backend:
+  image: ngeek4geek/weather-app-backend:latest
+  port: 5000
+
+replicaCount: 2

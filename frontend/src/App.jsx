@@ -42,7 +42,7 @@ function App() {
         {weather && !weather.error && (
           <div className="mt-6 p-4 bg-blue-50 border border-blue-300 rounded-lg shadow-sm">
             <div className="text-2xl font-semibold text-gray-800">
-              {weather.icon} {weather.city}
+              {weather.icon} {weather.location}
             </div>
             <div className="text-gray-600 mt-2">{weather.description}</div>
             <div className="text-xl font-bold text-indigo-700 mt-1">

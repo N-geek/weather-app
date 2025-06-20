@@ -8,12 +8,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # update for production
+    allow_origins=["*"],  # Khi production, nên chỉnh domain cụ thể
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-def get_icon(description):
+def get_icon(description: str):
     desc = description.lower()
     if 'cloud' in desc: return '☁️'
     if 'rain' in desc: return '🌧️'
@@ -22,17 +22,77 @@ def get_icon(description):
     if 'snow' in desc: return '❄️'
     return '☁️'
 
+def geocode(address: str):
+    """Chuyển địa chỉ → lat/lon bằng Nominatim + ưu tiên kết quả có độ chính xác cao"""
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": address,
+        "format": "json",
+        "addressdetails": 1,
+        "limit": 5,
+        "accept-language": "vi",
+        "countrycodes": "vn"  # Ưu tiên kết quả ở Việt Nam
+    }
+    headers = {"User-Agent": "weather-app-fastapi"}
+
+    try:
+        res = requests.get(url, params=params, headers=headers, timeout=10)
+        res.raise_for_status()
+        results = res.json()
+
+        # Ưu tiên kết quả theo loại địa điểm
+        priority_types = ["house", "residential", "road", "village", "town", "city"]
+        for ptype in priority_types:
+            for r in results:
+                if r.get("type") == ptype and "lat" in r and "lon" in r:
+                    return float(r["lat"]), float(r["lon"]), r.get("display_name", address)
+
+        if results:
+            r = results[0]
+            return float(r["lat"]), float(r["lon"]), r.get("display_name", address)
+
+    except Exception as e:
+        print(f"[⚠️ geocode error] {e}")
+    return None, None, None
+
 @app.get("/weather")
-def weather(city: str = Query(...)):
+def weather(
+    query: str = Query(default=None, description="Địa chỉ hoặc thành phố"),
+    city: str = Query(default=None, description="Tương thích tham số cũ")
+):
     api_key = os.getenv("WEATHER_API")
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-    res = requests.get(url)
-    if res.status_code == 200:
+    user_input = query or city
+    if not user_input:
+        return {"error": "Bạn cần nhập địa chỉ hoặc tên thành phố."}
+
+    print(f"[📍 user_input] {user_input}")
+
+    lat, lon, location_label = geocode(user_input)
+    print(f"[🌐 geocode] lat={lat}, lon={lon}, location={location_label}")
+
+    # Gọi OpenWeather theo lat/lon nếu có
+    if lat is not None and lon is not None:
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
+    else:
+        # Fallback nếu geocode thất bại → thêm mã quốc gia nếu có thể
+        if "," not in user_input and user_input.lower() == "london":
+            user_input = "London,GB"
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={user_input}&appid={api_key}&units=metric"
+        location_label = user_input.title()
+
+    print(f"[🌤️ API call] {url}")
+
+    try:
+        res = requests.get(url, timeout=10)
+        res.raise_for_status()
         data = res.json()
+
         return {
-            "city": city.title(),
+            "location": location_label or data.get("name", user_input.title()),
             "temp": round(data["main"]["temp"]),
             "description": data["weather"][0]["description"],
             "icon": get_icon(data["weather"][0]["description"])
         }
-    return {"error": "City not found"}
+    except Exception as e:
+        print(f"[❌ weather fetch error] {e}")
+        return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
