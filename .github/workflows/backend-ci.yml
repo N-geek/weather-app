@@ -1,4 +1,4 @@
-name: Workflow for checking weather application
+name: Workflow for checking weather backend
 
 on:
     push:
