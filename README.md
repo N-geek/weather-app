@@ -61,4 +61,8 @@ docker-compose up --build
 ```
 
 Visit frontend at: http://localhost:3000
+![image](https://github.com/user-attachments/assets/c9509479-cde8-48f1-9a8c-a83220b0248d)
+
 Backend runs at: http://localhost:5000/weather?city=Hanoi
+![image](https://github.com/user-attachments/assets/371b20e4-cdd3-44a4-a843-5af96d77d111)
+
