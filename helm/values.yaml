@@ -1,9 +1,27 @@
-frontend:
-  image: ngeek4geek/weather-app-frontend:latest
-  port: 80
+replicaCount: 1
 
 backend:
   image: ngeek4geek/weather-app-backend:latest
   port: 5000
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
 
-replicaCount: 2
+frontend:
+  image: ngeek4geek/weather-app-frontend:latest
+  port: 80
+  resources:
+    limits:
+      cpu: "100m"
+      memory: "128Mi"
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+
+ingress:
+  enabled: false
+  host: weather.local

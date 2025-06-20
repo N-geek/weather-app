@@ -13,7 +13,8 @@ spec:
         app: weather-backend
     spec:
       containers:
-        - name: backend
-          image: {{ .Values.backend.image }}
-          ports:
-            - containerPort: {{ .Values.backend.port }}
+      - name: backend
+        image: {{ .Values.backend.image }}
+        ports:
+        - containerPort: {{ .Values.backend.port }}
+        resources: {{- toYaml .Values.backend.resources | nindent 10 }}

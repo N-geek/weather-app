@@ -24,7 +24,7 @@ def get_icon(description: str):
     return '☁️'
 
 def geocode(address: str):
-    """Chuyển địa chỉ → lat/lon bằng Nominatim + ưu tiên kết quả có độ chính xác cao"""
+    """Chuyển địa chỉ → lat/lon bằng Nominatim, ưu tiên kết quả chính xác ở VN"""
     url = "https://nominatim.openstreetmap.org/search"
     params = {
         "q": address,
@@ -32,7 +32,7 @@ def geocode(address: str):
         "addressdetails": 1,
         "limit": 5,
         "accept-language": "vi",
-        "countrycodes": "vn"  # Ưu tiên kết quả ở Việt Nam
+        "countrycodes": ""  # KHÔNG ép buộc country nếu người dùng nhập quốc gia
     }
     headers = {"User-Agent": "weather-app-fastapi"}
 
@@ -41,7 +41,7 @@ def geocode(address: str):
         res.raise_for_status()
         results = res.json()
 
-        # Ưu tiên kết quả theo loại địa điểm
+        # Ưu tiên theo loại địa điểm
         priority_types = ["house", "residential", "road", "village", "town", "city"]
         for ptype in priority_types:
             for r in results:
@@ -71,12 +71,10 @@ def weather(
     lat, lon, location_label = geocode(user_input)
     print(f"[🌐 geocode] lat={lat}, lon={lon}, location={location_label}")
 
-    # Gọi OpenWeather theo lat/lon nếu có
     if lat is not None and lon is not None:
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
     else:
-        if "," not in user_input:
-            user_input += ",VN"
+        # KHÔNG thêm ",VN" nữa – để user nhập đúng định dạng city,country_code nếu muốn
         encoded_city = quote_plus(user_input)
         url = f"https://api.openweathermap.org/data/2.5/weather?q={encoded_city}&appid={api_key}&units=metric"
         location_label = user_input.title()

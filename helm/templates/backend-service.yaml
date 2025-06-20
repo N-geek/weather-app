@@ -6,6 +6,6 @@ spec:
   selector:
     app: weather-backend
   ports:
-    - port: 5000
-      targetPort: {{ .Values.backend.port }}
+  - port: 5000
+    targetPort: {{ .Values.backend.port }}
   type: ClusterIP

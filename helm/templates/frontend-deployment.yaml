@@ -13,7 +13,8 @@ spec:
         app: weather-frontend
     spec:
       containers:
-        - name: frontend
-          image: {{ .Values.frontend.image }}
-          ports:
-            - containerPort: {{ .Values.frontend.port }}
+      - name: frontend
+        image: {{ .Values.frontend.image }}
+        ports:
+        - containerPort: {{ .Values.frontend.port }}
+        resources: {{- toYaml .Values.frontend.resources | nindent 10 }}
