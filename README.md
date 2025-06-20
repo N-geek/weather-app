@@ -31,9 +31,11 @@ Go to https://home.openweathermap.org/users/sign_in and create a free account
 
 # 2. Login
 After login with free account > choose profile on the top right of the website > Chose My API keys
+```
 
 ![image](https://github.com/user-attachments/assets/c1112b4f-7ccb-4f8e-9fba-0b248f507443)
 
+```bash
 # 3. Copy Key API fedault and paste it to your .env file
 WEATHER_API=your_openweathermap_api_key
 ```
