@@ -43,7 +43,7 @@ After login with free account > choose profile on the top right of the website >
 WEATHER_API=your_openweathermap_api_key
 ```
 
-### 3️. Install nodejs if it is not available yet
+### 3️. Install nodejs if it is not available
 
 ```bash
 # 1. Update your system
