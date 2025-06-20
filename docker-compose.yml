@@ -1,12 +1,15 @@
-version: '3.8'
-
+version: "3.8"
 services:
-  web:
-    build:
-      context: ./
+  backend:
+    build: ./backend
     ports:
-    - "5000:5000"
+      - "5000:5000"
     env_file:
-    - .env
-    volumes:
-    - .:/app
+      - .env
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
