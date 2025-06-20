@@ -15,21 +15,46 @@ A fullstack weather application built with **FastAPI** (Python backend), **React
 
 ## 🚀 Quick Start
 
-### 1️⃣ Clone the Repo
+### 1️. Clone the Repo
 
 ```bash
 git clone https://github.com/your-username/weather-app.git
 cd weather-app
 ```
 
-### 2️⃣ Clone the Repo
+### 2️. Clone the Repo
 Create a .env file in both the root
 
 ```bash
 WEATHER_API_KEY=your_openweathermap_api_key
 ```
 
-### 3️⃣ Build & Run with Docker
+### 3️. Install nodejs if it is not available yet
+
+```bash
+# 1. Update your system
+sudo apt update
+sudo apt upgrade -y
+
+# 2. Install curl if not installed
+sudo apt install curl -y
+
+# 3. Add NodeSource repo for latest Node.js (e.g., version 20)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+# 4. Install Node.js and npm
+sudo apt install -y nodejs
+
+# 5. Verify installation
+node -v
+npm -v
+
+# 6. npm install
+cd frontend
+npm install
+```
+
+### 4. Build & Run with Docker
 
 ```bash
 docker-compose up --build
