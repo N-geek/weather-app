@@ -29,8 +29,10 @@ jobs:
 
         - name: Clean up all image before create
           run: |
-            docker stop $(docker ps -q)
-            docker rm $(docker ps -q)
+            if [ "$(docker ps -q)" ]; then
+              docker stop $(docker ps -q)
+              docker rm $(docker ps -aq)
+            fi
 
         - name: Build docker image
           run: |
