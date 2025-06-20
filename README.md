@@ -26,6 +26,13 @@ cd weather-app
 Create a .env file in both the root
 
 ```bash
+# 1. How to get weather api
+Go to https://home.openweathermap.org/users/sign_in and create a free account
+
+# 2. Login
+After login with free account > choose profile on the top right of the website > Chose My API keys
+
+# 3. Copy Key API fedault and paste it to your .env file
 WEATHER_API=your_openweathermap_api_key
 ```
 
