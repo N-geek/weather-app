@@ -1,4 +1,4 @@
-# 🌤️ Weather Notification App
+# 🌤️ Weather Information App
 
 A fullstack weather application built with **FastAPI** (Python backend), **React** (frontend), **Tailwind CSS**, Docker, and GitHub Actions CI/CD. Weather data is fetched from [OpenWeatherMap](https://openweathermap.org/api).
 
