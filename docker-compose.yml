@@ -1,6 +1,7 @@
 services:
   backend:
     build: ./backend
+    image: weather-app-backend
     ports:
       - "5000:5000"
     env_file:
@@ -8,6 +9,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: weather-app-frontend
     ports:
       - "3000:80"
     depends_on:
