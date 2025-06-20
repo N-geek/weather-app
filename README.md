@@ -26,7 +26,7 @@ cd weather-app
 Create a .env file in both the root
 
 ```bash
-WEATHER_API_KEY=your_openweathermap_api_key
+WEATHER_API=your_openweathermap_api_key
 ```
 
 ### 3️. Install nodejs if it is not available yet
