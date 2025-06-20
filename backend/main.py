@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 import requests, os
 
@@ -74,10 +75,10 @@ def weather(
     if lat is not None and lon is not None:
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
     else:
-        # Fallback nếu geocode thất bại → thêm mã quốc gia nếu có thể
-        if "," not in user_input and user_input.lower() == "london":
-            user_input = "London,GB"
-        url = f"https://api.openweathermap.org/data/2.5/weather?q={user_input}&appid={api_key}&units=metric"
+        if "," not in user_input:
+            user_input += ",VN"
+        encoded_city = quote_plus(user_input)
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={encoded_city}&appid={api_key}&units=metric"
         location_label = user_input.title()
 
     print(f"[🌤️ API call] {url}")
