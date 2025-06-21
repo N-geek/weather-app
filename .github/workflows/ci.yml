@@ -14,11 +14,25 @@ jobs:
         - name: Checkout sourcode
           uses: actions/checkout@v3
 
+        - name: Set up AWS CLI
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+        - name: Update kubeconfig
+          run: aws eks update-kubeconfig --name weather-app-cluster --region $AWS_REGION
+
+        - name: Get backend external URL and generate .env
+          working-directory: ./frontend
+          run: |
+            BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+            echo "VITE_API_URL=http://$BACKEND_HOST:5000" > .env
+            echo "WEATHER_API=${{ secrets.WEATHER_API }}" >> .env
+
         - name: Create .env file from secret
           working-directory: ./frontend
           run: |
-            echo "WEATHER_API=${{ secrets.WEATHER_API }}" > .env
-            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
             npm install
             npm run build
         - name: Configure Git identity
@@ -30,7 +44,7 @@ jobs:
           run: |
             git config --global user.name "$GIT_USER"
             git config --global user.email "$GIT_EMAIL"
-            git remote set-url origin https://$GH_TOKEN@github.com/${{ github.repository }}.git
+            git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
 
         - name: Deploy frontend to GitHub Pages
           working-directory: ./frontend
