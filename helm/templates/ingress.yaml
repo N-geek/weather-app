@@ -11,14 +11,14 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /weather-app/
             pathType: Prefix
             backend:
               service:
                 name: weather-frontend-svc
                 port:
                   number: 80
-          - path: /api/
+          - path: /weather-app/api/
             pathType: Prefix
             backend:
               service:

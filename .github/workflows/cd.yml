@@ -44,7 +44,7 @@ jobs:
             --from-literal=WEATHER_API=$WEATHER_API \
             --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm upgrade --install
+      - name: Helm upgrade
         run: |
           helm upgrade --install weather ./helm \
             --install \
@@ -55,7 +55,7 @@ jobs:
             --wait \
             --debug \
             --timeout 20m
-            
+
     #   - name: Helm create
     #     run: |
     #         helm uninstall weather -n default
