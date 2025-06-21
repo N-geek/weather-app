@@ -74,9 +74,26 @@ npm install
 docker-compose up --build
 ```
 
-Visit frontend at: http://localhost:3000
-![image](https://github.com/user-attachments/assets/c9509479-cde8-48f1-9a8c-a83220b0248d)
+### 5. Create CI workflow to automation build lastest image and push it to Docker Hub
 
-Backend runs at: http://localhost:5000/weather?city=Hanoi
-![image](https://github.com/user-attachments/assets/371b20e4-cdd3-44a4-a843-5af96d77d111)
+```bash
+# 1. Create a free account for docker hub
+Go to this page https://app.docker.com/
+Create a free account on it or connect it with github account for faster registration
 
+# 2. Create repository 
+Go to this page https://hub.docker.com/repositories
+Create repository to store the image after build successful
+Forx eample:
+```
+![image](https://github.com/user-attachments/assets/89883650-7d1c-49c5-ae18-9587f065da02)
+
+```bash
+# 3. Create personal access for authetication log in
+Go to this page https://app.docker.com/settings/personal-access-tokens
+```
+![image](https://github.com/user-attachments/assets/78042bb2-e989-43b1-b962-0a19e748fc54)
+```bash
+# 4. Update CI to authetication and push image to that repo
+```
+![image](https://github.com/user-attachments/assets/c31985eb-8f47-4df9-9189-b70b68a85b65)
