@@ -44,26 +44,26 @@ jobs:
             --from-literal=WEATHER_API=$WEATHER_API \
             --dry-run=client -o yaml | kubectl apply -f -
 
-    #   - name: Helm upgrade --install
-    #     run: |
-    #       helm upgrade --install weather ./helm \
-    #         --install \
-    #         --atomic \
-    #         --force \
-    #         --namespace default \
-    #         --set image.tag=$GITHUB_SHA \
-    #         --create-namespace \
-    #         --wait \
-    #         --debug \
-    #         --timeout 20m
-      - name: Helm create
+      - name: Helm upgrade --install
         run: |
-            helm uninstall weather -n default
-            helm install weather ./helm \
-                --namespace default \
-                --create-namespace \
-                --wait \
-                --timeout 20m
+          helm upgrade --install weather ./helm \
+            --install \
+            --atomic \
+            --namespace default \
+            --set image.tag=$GITHUB_SHA \
+            --create-namespace \
+            --wait \
+            --debug \
+            --timeout 20m
+            
+    #   - name: Helm create
+    #     run: |
+    #         helm uninstall weather -n default
+    #         helm install weather ./helm \
+    #             --namespace default \
+    #             --create-namespace \
+    #             --wait \
+    #             --timeout 20m
             
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
