@@ -15,6 +15,7 @@ jobs:
         AWS_REGION: us-east-1
         CLUSTER_NAME: weather-app-cluster
         WEATHER_API: ${{ secrets.WEATHER_API }}
+        GITHUB_SHA: ${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -47,6 +48,7 @@ jobs:
         run: |
           helm upgrade --install weather ./helm \
             --namespace default \
+            --set image.tag=$GITHUB_SHA \
             --create-namespace \
             --wait \
             --timeout 180s
@@ -58,9 +60,9 @@ jobs:
           curl -s "http://localhost:5100/weather?query=Hanoi" | tee result.json
 
           if grep -q "temp" result.json; then
-            echo "Backend test passed"
+            echo "Backend $GITHUB_SHA test passed"
           else
-            echo "Backend test failed"
+            echo "Backend $GITHUB_SHA test failed"
             exit 1
           fi
 
@@ -68,4 +70,4 @@ jobs:
         run: |
           kubectl port-forward svc/weather-frontend-svc 8180:80 &
           sleep 5
-          curl -s http://localhost:8180 | grep -q "Weather Information" && echo "Frontend test passed" || (echo "Frontend failed" && exit 1)
+          curl -s http://localhost:8180 | grep -q "Weather Information" && echo "Frontend $GITHUB_SHA  test passed" || (echo "Frontend $GITHUB_SHA failed" && exit 1)
