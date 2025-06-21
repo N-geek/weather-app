@@ -50,7 +50,10 @@ jobs:
             --install \
             --atomic \
             --namespace default \
-            --set image.tag=$GITHUB_SHA \
+            --set backend.image.repository=ngeek4geek/weather-app-backend \
+            --set backend.image.tag=$GITHUB_SHA \
+            --set frontend.image.repository=ngeek4geek/weather-app-frontend \
+            --set frontend.image.tag=$GITHUB_SHA \
             --create-namespace \
             --wait \
             --debug \
