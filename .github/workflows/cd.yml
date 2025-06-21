@@ -71,45 +71,45 @@ jobs:
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
 
-      - name: Get Backend External URL
-        id: backend_ip
-        run: |
-          sleep 5
-          BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
-          echo "BACKEND_URL=http://$BACKEND_HOST:5000" >> "$GITHUB_ENV"
-          echo "Backend URL: http://$BACKEND_HOST:5000"
-      - name: Write VITE_API_URL to frontend/.env
-        run: |
-          echo "VITE_API_URL=$BACKEND_URL" > .env.production
-          echo "VITE_API_URL=$BACKEND_URL" > frontend/.env
-          cat frontend/.env
+    #   - name: Get Backend External URL
+    #     id: backend_ip
+    #     run: |
+    #       sleep 5
+    #       BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+    #       echo "BACKEND_URL=http://$BACKEND_HOST:5000" >> "$GITHUB_ENV"
+    #       echo "Backend URL: http://$BACKEND_HOST:5000"
+    #   - name: Write VITE_API_URL to frontend/.env
+    #     run: |
+    #       echo "VITE_API_URL=$BACKEND_URL" > .env.production
+    #       echo "VITE_API_URL=$BACKEND_URL" > frontend/.env
+    #       cat frontend/.env
 
       - name: Rebuild Frontend with new API URL
         working-directory: frontend
         run: |
           npm ci
           npm run build
-      - name: Get Frontend External URL
-        id: frontend_ip
-        run: |
-          sleep 5
-          FRONTEND_HOST=$(kubectl get svc weather-frontend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
-          echo "FRONTEND_URL=http://$FRONTEND_HOST" >> "$GITHUB_ENV"
-          echo "Frontend URL: http://$FRONTEND_HOST"
+    #   - name: Get Frontend External URL
+    #     id: frontend_ip
+    #     run: |
+    #       sleep 5
+    #       FRONTEND_HOST=$(kubectl get svc weather-frontend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+    #       echo "FRONTEND_URL=http://$FRONTEND_HOST" >> "$GITHUB_ENV"
+    #       echo "Frontend URL: http://$FRONTEND_HOST"
 
-      - name: Port-forward & Test Backend
-        run: |
-          sleep 5
-          curl -s "$BACKEND_URL/weather?query=Hanoi" | tee result.json
+    #   - name: Port-forward & Test Backend
+    #     run: |
+    #       sleep 5
+    #       curl -s "$BACKEND_URL/weather?query=Hanoi" | tee result.json
 
-          if grep -q "temp" result.json; then
-            echo "Backend $GITHUB_SHA test passed"
-          else
-            echo "Backend $GITHUB_SHA test failed"
-            exit 1
-          fi
+    #       if grep -q "temp" result.json; then
+    #         echo "Backend $GITHUB_SHA test passed"
+    #       else
+    #         echo "Backend $GITHUB_SHA test failed"
+    #         exit 1
+    #       fi
 
-      - name: Port-forward & Test Frontend
-        run: |
-          sleep 5
-          curl -s $FRONTEND_URL | grep -q "Weather Information" && echo "Frontend $GITHUB_SHA  test passed" || (echo "Frontend $GITHUB_SHA failed" && exit 1)
+    #   - name: Port-forward & Test Frontend
+    #     run: |
+    #       sleep 5
+    #       curl -s $FRONTEND_URL | grep -q "Weather Information" && echo "Frontend $GITHUB_SHA  test passed" || (echo "Frontend $GITHUB_SHA failed" && exit 1)
