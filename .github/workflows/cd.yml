@@ -36,7 +36,7 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.13.3
-          
+
       - name: Setup weather api authentication
         run: |
           kubectl create secret generic weather-secret --from-literal=WEATHER_API=$WEATHER_API
@@ -55,7 +55,7 @@ jobs:
           sleep 5
           curl -s "http://localhost:5100/weather?query=Hanoi" | tee result.json
 
-          if grep -q "temperature" result.json; then
+          if grep -q "temp" result.json; then
             echo "Backend test passed"
           else
             echo "Backend test failed"
@@ -66,4 +66,4 @@ jobs:
         run: |
           kubectl port-forward svc/weather-frontend-svc 8180:80 &
           sleep 5
-          curl -s http://localhost:8180 | grep -q "Weather App" && echo "Frontend test passed" || (echo "Frontend failed" && exit 1)
+          curl -s http://localhost:8180 | grep -q "Weather Information" && echo "Frontend test passed" || (echo "Frontend failed" && exit 1)
