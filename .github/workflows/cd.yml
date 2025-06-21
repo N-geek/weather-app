@@ -14,6 +14,7 @@ jobs:
     env:
         AWS_REGION: us-east-1
         CLUSTER_NAME: weather-app-cluster
+        WEATHER_API: ${{ secrets.WEATHER_API }}
 
     steps:
       - name: Checkout code
@@ -25,7 +26,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
+    
+      - name: Setup weather api authentication
+        run: |
+          kubectl create secret generic weather-secret --from-literal=WEATHER_API=$WEATHER_API
+          
       - name: Set up kubeconfig for EKS
         run: |
           aws eks update-kubeconfig \

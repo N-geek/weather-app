@@ -3,6 +3,9 @@ replicaCount: 1
 backend:
   image: ngeek4geek/weather-app-backend:latest
   port: 5000
+  envFrom:
+    - secretRef:
+        name: weather-secret
   resources:
     limits:
       cpu: "200m"

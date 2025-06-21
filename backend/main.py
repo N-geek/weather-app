@@ -53,7 +53,7 @@ def geocode(address: str):
             return float(r["lat"]), float(r["lon"]), r.get("display_name", address)
 
     except Exception as e:
-        print(f"[⚠️ geocode error] {e}")
+        print(f"[geocode error] {e}")
     return None, None, None
 
 @app.get("/weather")
@@ -66,20 +66,19 @@ def weather(
     if not user_input:
         return {"error": "Bạn cần nhập địa chỉ hoặc tên thành phố."}
 
-    print(f"[📍 user_input] {user_input}")
+    print(f"[user_input] {user_input}")
 
     lat, lon, location_label = geocode(user_input)
-    print(f"[🌐 geocode] lat={lat}, lon={lon}, location={location_label}")
+    print(f"[geocode] lat={lat}, lon={lon}, location={location_label}")
 
     if lat is not None and lon is not None:
         url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
     else:
-        # KHÔNG thêm ",VN" nữa – để user nhập đúng định dạng city,country_code nếu muốn
         encoded_city = quote_plus(user_input)
         url = f"https://api.openweathermap.org/data/2.5/weather?q={encoded_city}&appid={api_key}&units=metric"
         location_label = user_input.title()
 
-    print(f"[🌤️ API call] {url}")
+    print(f"[API call] {url}")
 
     try:
         res = requests.get(url, timeout=10)
@@ -93,5 +92,5 @@ def weather(
             "icon": get_icon(data["weather"][0]["description"])
         }
     except Exception as e:
-        print(f"[❌ weather fetch error] {e}")
+        print(f"[weather fetch error] {e}")
         return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
