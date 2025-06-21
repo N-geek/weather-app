@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import requests, os
 
 load_dotenv()
-app = FastAPI()
+app = FastAPI(root_path="/weather-app/api")
 
 app.add_middleware(
     CORSMiddleware,
