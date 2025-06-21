@@ -94,3 +94,7 @@ def weather(
     except Exception as e:
         print(f"[weather fetch error] {e}")
         return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
+
+@app.route('/health')
+def health():
+    return "OK", 200

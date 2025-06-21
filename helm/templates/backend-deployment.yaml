@@ -14,6 +14,20 @@ spec:
     spec:
       containers:
       - name: backend
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          failureThreshold: 5
         image: {{ .Values.backend.image }}
         envFrom: {{- toYaml .Values.backend.envFrom | nindent 12 }}
         ports:
