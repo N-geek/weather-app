@@ -51,7 +51,7 @@ jobs:
             --set image.tag=$GITHUB_SHA \
             --create-namespace \
             --wait \
-            --timeout 180s
+            --timeout 300s
 
       - name: Port-forward & Test Backend
         run: |
