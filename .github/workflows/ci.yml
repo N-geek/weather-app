@@ -17,6 +17,10 @@ jobs:
         - name: Create .env file from secret
           run: |
             echo "WEATHER_API=${{ secrets.WEATHER_API }}" > .env
+            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
+            npm install
+            npm run build
+            npm run deploy
 
         - name: Set up Docker
           uses: docker/setup-buildx-action@v3
