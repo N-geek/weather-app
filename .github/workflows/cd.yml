@@ -58,11 +58,13 @@ jobs:
     #         --timeout 20m
       - name: Helm create
         run: |
+            helm uninstall weather -n default
             helm install weather ./helm \
                 --namespace default \
                 --create-namespace \
                 --wait \
-                --timeout 10m
+                --timeout 20m
+                --set service.waitForLoadBalancer=false
             
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
