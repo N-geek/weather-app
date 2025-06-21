@@ -7,8 +7,8 @@ function App() {
   const fetchWeather = async (e) => {
     e.preventDefault();
     try {
-      //const res = await fetch(`${import.meta.env.VITE_API_URL}/weather?city=${city}`);
-      const res = await fetch(`http://localhost:5000/weather?city=${city}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/weather?city=${city}`);
+      // const res = await fetch(`http://localhost:5000/weather?city=${city}`);
       const data = await res.json();
       setWeather(data);
     } catch (err) {
