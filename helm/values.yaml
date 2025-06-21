@@ -34,12 +34,26 @@ frontend:
     externalTrafficPolicy: Cluster
 
 ingress:
-  enabled: false
-  className: nginx
-  annotations: {}
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
   hosts:
     - host: weather.local
       paths:
         - path: /
           pathType: Prefix
-  tls: []
+          backend:
+            service:
+              name: weather-frontend-svc
+              port:
+                number: 80
+        - path: /api/
+          pathType: Prefix
+          backend:
+            service:
+              name: weather-backend-svc
+              port:
+                number: 5000

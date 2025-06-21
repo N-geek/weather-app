@@ -8,4 +8,4 @@ spec:
   ports:
   - port: 5000
     targetPort: {{ .Values.backend.port }}
-  type: LoadBalancer
+  type: ClusterIP
