@@ -61,7 +61,6 @@ jobs:
 
       - name: Helm create
         run: |
-            helm uninstall weather -n default
             helm install weather ./helm \
                 --namespace default \
                 --create-namespace \
