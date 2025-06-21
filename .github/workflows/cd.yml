@@ -64,7 +64,6 @@ jobs:
                 --create-namespace \
                 --wait \
                 --timeout 20m
-                --set service.waitForLoadBalancer=false
             
       - name: Update kubeconfig
         run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION

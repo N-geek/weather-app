@@ -16,9 +16,7 @@ backend:
   service:
     type: LoadBalancer
     port: 5000
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    externalTrafficPolicy: Local
+    externalTrafficPolicy: Cluster
 
 frontend:
   image: ngeek4geek/weather-app-frontend:latest
@@ -33,9 +31,7 @@ frontend:
   service:
     type: LoadBalancer
     port: 80
-    annotations:
-      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    externalTrafficPolicy: Local
+    externalTrafficPolicy: Cluster
 
 ingress:
   enabled: false
