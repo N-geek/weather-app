@@ -15,22 +15,22 @@ jobs:
           uses: actions/checkout@v3
 
         - name: Create .env file from secret
+          working-directory: ./frontend
           run: |
             echo "WEATHER_API=${{ secrets.WEATHER_API }}" > .env
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
-            ls -a
-            cd frontend
             npm install
             npm run build
         - name: Configure Git identity
+          working-directory: ./frontend
           run: |
             git config --global user.name "github-actions[bot]"
             git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
         - name: Deploy frontend to GitHub Pages
+          working-directory: ./frontend
           run: |
             npm run deploy
-            cd ..
 
         - name: Set up Docker
           uses: docker/setup-buildx-action@v3
