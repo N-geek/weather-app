@@ -1,18 +1,20 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 import requests, os
 
 load_dotenv()
-app = FastAPI(root_path="/weather-app/api")
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Khi production, nên chỉnh domain cụ thể
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+router = APIRouter(prefix="/weather-app/api")
 
 def get_icon(description: str):
     desc = description.lower()
@@ -24,7 +26,6 @@ def get_icon(description: str):
     return '☁️'
 
 def geocode(address: str):
-    """Chuyển địa chỉ → lat/lon bằng Nominatim, ưu tiên kết quả chính xác ở VN"""
     url = "https://nominatim.openstreetmap.org/search"
     params = {
         "q": address,
@@ -32,7 +33,7 @@ def geocode(address: str):
         "addressdetails": 1,
         "limit": 5,
         "accept-language": "vi",
-        "countrycodes": ""  # KHÔNG ép buộc country nếu người dùng nhập quốc gia
+        "countrycodes": ""
     }
     headers = {"User-Agent": "weather-app-fastapi"}
 
@@ -41,7 +42,6 @@ def geocode(address: str):
         res.raise_for_status()
         results = res.json()
 
-        # Ưu tiên theo loại địa điểm
         priority_types = ["house", "residential", "road", "village", "town", "city"]
         for ptype in priority_types:
             for r in results:
@@ -56,7 +56,7 @@ def geocode(address: str):
         print(f"[geocode error] {e}")
     return None, None, None
 
-@app.get("/weather")
+@router.get("/weather")
 def weather(
     query: str = Query(default=None, description="Địa chỉ hoặc thành phố"),
     city: str = Query(default=None, description="Tương thích tham số cũ")
@@ -67,7 +67,6 @@ def weather(
         return {"error": "Bạn cần nhập địa chỉ hoặc tên thành phố."}
 
     print(f"[user_input] {user_input}")
-
     lat, lon, location_label = geocode(user_input)
     print(f"[geocode] lat={lat}, lon={lon}, location={location_label}")
 
@@ -84,7 +83,6 @@ def weather(
         res = requests.get(url, timeout=10)
         res.raise_for_status()
         data = res.json()
-
         return {
             "location": location_label or data.get("name", user_input.title()),
             "temp": round(data["main"]["temp"]),
@@ -95,6 +93,9 @@ def weather(
         print(f"[weather fetch error] {e}")
         return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
 
-@app.get("/health")
+@router.get("/health")
 async def health():
     return {"status": "ok"}
+
+# Đăng ký router vào FastAPI app
+app.include_router(router)
