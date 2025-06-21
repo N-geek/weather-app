@@ -48,10 +48,10 @@ jobs:
       - name: Helm upgrade --install
         run: |
           helm upgrade --install weather ./helm \
-            --install
-            --atomic
-            --force
-            --recreate-pods
+            --install \
+            --atomic \
+            --force \
+            --recreate-pods \
             --namespace default \
             --set image.tag=$GITHUB_SHA \
             --create-namespace \
