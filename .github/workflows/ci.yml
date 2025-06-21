@@ -18,6 +18,8 @@ jobs:
           run: |
             echo "WEATHER_API=${{ secrets.WEATHER_API }}" > .env
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
+            ll -a
+            cd frontend
             npm install
             npm run build
             npm run deploy
