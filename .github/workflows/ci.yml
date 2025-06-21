@@ -30,7 +30,7 @@ jobs:
             echo "VITE_API_URL=http://$BACKEND_HOST:5000" > .env
             echo "WEATHER_API=${{ secrets.WEATHER_API }}" >> .env
 
-        - name: Create .env file from secret
+        - name: Install dependencies and build
           working-directory: ./frontend
           run: |
             npm install
