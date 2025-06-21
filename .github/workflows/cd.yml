@@ -48,6 +48,10 @@ jobs:
       - name: Helm upgrade --install
         run: |
           helm upgrade --install weather ./helm \
+            --install
+            --atomic
+            --force
+            --recreate-pods
             --namespace default \
             --set image.tag=$GITHUB_SHA \
             --create-namespace \
@@ -65,6 +69,7 @@ jobs:
           echo "Backend URL: http://$BACKEND_HOST:5000"
       - name: Write VITE_API_URL to frontend/.env
         run: |
+          echo "VITE_API_URL=$BACKEND_URL" > .env.production
           echo "VITE_API_URL=$BACKEND_URL" > frontend/.env
           cat frontend/.env
 
