@@ -26,11 +26,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-    
-      - name: Setup weather api authentication
-        run: |
-          kubectl create secret generic weather-secret --from-literal=WEATHER_API=$WEATHER_API
-          
       - name: Set up kubeconfig for EKS
         run: |
           aws eks update-kubeconfig \
@@ -41,6 +36,10 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.13.3
+          
+      - name: Setup weather api authentication
+        run: |
+          kubectl create secret generic weather-secret --from-literal=WEATHER_API=$WEATHER_API
 
       - name: Helm upgrade --install
         run: |
