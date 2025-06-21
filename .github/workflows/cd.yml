@@ -47,7 +47,7 @@ jobs:
 
       - name: Port-forward & Test Backend
         run: |
-          kubectl port-forward svc/weather-backend-svc 5000:5000 &
+          kubectl port-forward svc/weather-backend-svc 5100:5000 &
           sleep 5
           curl -s "http://localhost:5000/weather?query=Hanoi" | tee result.json
 
@@ -60,6 +60,6 @@ jobs:
 
       - name: Port-forward & Test Frontend
         run: |
-          kubectl port-forward svc/weather-frontend-svc 8080:80 &
+          kubectl port-forward svc/weather-frontend-svc 8180:80 &
           sleep 5
           curl -s http://localhost:8080 | grep -q "Weather App" && echo "Frontend test passed" || (echo "Frontend failed" && exit 1)
