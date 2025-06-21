@@ -41,15 +41,16 @@ ingress:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
   hosts:
-    - paths:
-        - path: /
+    - host: "*"
+      paths:
+        - path: /weather-app/
           pathType: Prefix
           backend:
             service:
               name: weather-frontend-svc
               port:
                 number: 80
-        - path: /api/
+        - path: /weather-app/api/
           pathType: Prefix
           backend:
             service:
