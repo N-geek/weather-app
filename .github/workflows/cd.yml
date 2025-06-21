@@ -51,7 +51,6 @@ jobs:
             --install \
             --atomic \
             --force \
-            --recreate-pods \
             --namespace default \
             --set image.tag=$GITHUB_SHA \
             --create-namespace \
