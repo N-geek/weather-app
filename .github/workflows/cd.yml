@@ -39,7 +39,9 @@ jobs:
 
       - name: Setup weather api authentication
         run: |
-          kubectl create secret generic weather-secret --from-literal=WEATHER_API=$WEATHER_API
+          kubectl create secret generic weather-secret \
+            --from-literal=WEATHER_API=$WEATHER_API \
+            --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Helm upgrade --install
         run: |
