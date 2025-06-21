@@ -16,6 +16,7 @@ jobs:
         CLUSTER_NAME: weather-app-cluster
         WEATHER_API: ${{ secrets.WEATHER_API }}
         GITHUB_SHA: ${{ github.sha }}
+        VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
     steps:
       - name: Checkout code
@@ -52,12 +53,27 @@ jobs:
             --create-namespace \
             --wait \
             --timeout 300s
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
+
+      - name: Get Backend External URL
+        id: backend_ip
+        run: |
+          BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+          echo "BACKEND_URL=http://$BACKEND_HOST:5000" >> "$GITHUB_ENV"
+          echo "Backend URL: http://$BACKEND_HOST:5000"
+
+      - name: Get Frontend External URL
+        id: frontend_ip
+        run: |
+          FRONTEND_HOST=$(kubectl get svc weather-frontend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+          echo "FRONTEND_URL=http://$FRONTEND_HOST" >> "$GITHUB_ENV"
+          echo "Frontend URL: http://$FRONTEND_HOST"
 
       - name: Port-forward & Test Backend
         run: |
-          kubectl port-forward svc/weather-backend-svc 5100:5000 &
           sleep 5
-          curl -s "http://localhost:5100/weather?query=Hanoi" | tee result.json
+          curl -s "$BACKEND_URL/weather?query=Hanoi" | tee result.json
 
           if grep -q "temp" result.json; then
             echo "Backend $GITHUB_SHA test passed"
@@ -68,6 +84,5 @@ jobs:
 
       - name: Port-forward & Test Frontend
         run: |
-          kubectl port-forward svc/weather-frontend-svc 8180:80 &
           sleep 5
-          curl -s http://localhost:8180 | grep -q "Weather Information" && echo "Frontend $GITHUB_SHA  test passed" || (echo "Frontend $GITHUB_SHA failed" && exit 1)
+          curl -s $FRONTEND_URL | grep -q "Weather Information" && echo "Frontend $GITHUB_SHA  test passed" || (echo "Frontend $GITHUB_SHA failed" && exit 1)
