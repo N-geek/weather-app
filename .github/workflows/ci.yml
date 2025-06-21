@@ -28,7 +28,6 @@ jobs:
           run: |
             BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
             echo "VITE_API_URL=http://$BACKEND_HOST:5000" > .env
-            echo "WEATHER_API=${{ secrets.WEATHER_API }}" >> .env
 
         - name: Install dependencies and build
           working-directory: ./frontend
@@ -69,6 +68,7 @@ jobs:
 
         - name: Build docker image
           run: |
+            echo "WEATHER_API=${{ secrets.WEATHER_API }}" >> .env
             docker-compose up --build -d
             sleep 5
         
