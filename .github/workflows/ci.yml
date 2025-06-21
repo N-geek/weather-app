@@ -22,7 +22,15 @@ jobs:
             cd frontend
             npm install
             npm run build
+        - name: Configure Git identity
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+        - name: Deploy frontend to GitHub Pages
+          run: |
             npm run deploy
+            cd ..
 
         - name: Set up Docker
           uses: docker/setup-buildx-action@v3
