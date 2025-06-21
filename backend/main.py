@@ -95,6 +95,6 @@ def weather(
         print(f"[weather fetch error] {e}")
         return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
 
-@app.route('/health', methods=['GET'])
-def health():
-    return "OK", 200
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
