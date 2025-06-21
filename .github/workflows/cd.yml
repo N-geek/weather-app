@@ -63,7 +63,16 @@ jobs:
           BACKEND_HOST=$(kubectl get svc weather-backend-svc -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
           echo "BACKEND_URL=http://$BACKEND_HOST:5000" >> "$GITHUB_ENV"
           echo "Backend URL: http://$BACKEND_HOST:5000"
+      - name: Write VITE_API_URL to frontend/.env
+        run: |
+          echo "VITE_API_URL=$BACKEND_URL" > frontend/.env
+          cat frontend/.env
 
+      - name: Rebuild Frontend with new API URL
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
       - name: Get Frontend External URL
         id: frontend_ip
         run: |
