@@ -23,7 +23,7 @@ backend:
       service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-04f2dc2e663bdb3d3,subnet-0bce2b9230c94a80c"
 
 frontend:
-  image: ngeek4geek/weather-app-frontend:latest
+  image: ngeek4geek/weather-app-frontend:v1.0.1
   port: 80
   resources:
     limits:
