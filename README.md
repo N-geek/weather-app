@@ -4,12 +4,12 @@ A fullstack weather application built with **FastAPI** (Python backend), **React
 
 ## ⚙️ Features
 
-- 🔁 Get current weather data via city name
+- 🔁 Get current weather data via street or city name
 - 📦 Backend with FastAPI
-- 💻 Frontend with React + TailwindCSS
-- 🐳 Dockerized with docker-compose
+- 💻 Frontend with React + Vite
+- 🐳 Docker + Helm + K8s
 - ✅ CI/CD with GitHub Actions
-- 🔐 Secrets managed via `.env`
+- 🔐 Prometheus + Grafana
 
 ---
 
