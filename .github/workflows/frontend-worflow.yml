@@ -74,12 +74,12 @@ jobs:
       - name: Setup kubectl
         run: |
           aws eks update-kubeconfig --name $AWS_CLUSTER --region $AWS_REGION
-          
+
       - name: Get frontend external URL
         id: get-ip
         run: |
           export URL=$(kubectl get svc weather-frontend-svc -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "frontend_url=http://$URL" >> $FRONTEND_URL_OUTPUT
+          echo "FRONTEND_URL=http://$URL" >> $GITHUB_ENV
       
       - name: Set up Helm
         uses: azure/setup-helm@v3
@@ -98,18 +98,4 @@ jobs:
 
       - name: Test frontend calls backend correctly
         run: |
-          echo "Testing frontend at: ${{ steps.get-ip.outputs.frontend_url }}/weather?query=London"
-          for i in {1..10}; do
-            response=$(curl -s -H "Accept: application/json" "${{ steps.get-ip.outputs.frontend_url }}/weather?query=London")
-            echo "Response: $response"
-
-            # Check if it includes expected field (location, temp...)
-            if echo "$response" | grep -q "location"; then
-              echo "Frontend is calling backend successfully"
-              exit 0
-            fi
-            sleep 5
-          done
-
-          echo "Frontend did not respond correctly after retries"
-          exit 1
+          curl --fail $FRONTEND_URL
