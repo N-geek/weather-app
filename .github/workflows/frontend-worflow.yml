@@ -94,8 +94,7 @@ jobs:
           --wait \
           --atomic \
           --timeout 20m \
-          --set frontend.image.repository=$IMAGE_NAME \
-          --set frontend.image.tag=$IMAGE_TAG
+          --set frontend.image=$IMAGE_NAME:$IMAGE_TAG
 
       - name: Test frontend calls backend correctly
         run: |
