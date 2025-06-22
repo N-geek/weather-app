@@ -1,6 +1,6 @@
 # 🌤️ Weather Information App
 
-[A fullstack weather application built with **FastAPI** (Python backend), **React** (frontend), **Tailwind CSS**, Docker, and GitHub Actions CI/CD. Weather data is fetched from [OpenWeatherMap](https://openweathermap.org/api).](http://k8s-default-weatherf-e138165e28-dc680244ba4d34b4.elb.us-east-1.amazonaws.com/)
+http://k8s-default-weatherf-e138165e28-dc680244ba4d34b4.elb.us-east-1.amazonaws.com/)
 
 ## ⚙️ Features
 
