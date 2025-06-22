@@ -51,3 +51,42 @@ jobs:
           run: |
             docker image prune -af
             docker builder prune -af
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup kubectl
+        run: |
+          aws eks update-kubeconfig --name weather-app-cluster --region us-east-1
+
+      - name: Upgrade Helm Chart
+        run: |
+          helm upgrade weather ./helm --install --namespace default --wait --timeout 10m
+
+      - name: Get frontend external URL
+        id: get-ip
+        run: |
+          export URL=$(kubectl get svc weather-frontend-svc -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "frontend_url=http://$URL" >> $FRONTEND_URL_OUTPUT
+
+      - name: Test frontend calls backend correctly
+        run: |
+          echo "Testing frontend at: ${{ steps.get-ip.outputs.frontend_url }}/weather?query=London"
+          for i in {1..10}; do
+            response=$(curl -s -H "Accept: application/json" "${{ steps.get-ip.outputs.frontend_url }}/weather?query=London")
+            echo "Response: $response"
+
+            # Check if it includes expected field (location, temp...)
+            if echo "$response" | grep -q "location"; then
+              echo "Frontend is calling backend successfully"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "Frontend did not respond correctly after retries"
+          exit 1
