@@ -23,7 +23,7 @@ git clone https://github.com/your-username/weather-app.git
 cd weather-app
 ```
 
-### 2️. Clone the Repo
+### 2️. Get weather information
 Create a .env file in both the root
 
 ```bash
