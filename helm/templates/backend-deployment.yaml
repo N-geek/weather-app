@@ -13,23 +13,23 @@ spec:
         app: weather-backend
     spec:
       containers:
-      - name: backend
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 10
-          periodSeconds: 15
-          failureThreshold: 5
-        image: {{ .Values.backend.image }}
-        envFrom: {{- toYaml .Values.backend.envFrom | nindent 12 }}
-        ports:
-        - containerPort: {{ .Values.backend.port }}
-        resources: {{- toYaml .Values.backend.resources | nindent 10 }}
+        - name: backend
+          image: {{ .Values.backend.image }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          envFrom: {{- toYaml .Values.backend.envFrom | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.backend.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 5
+          resources: {{- toYaml .Values.backend.resources | nindent 12 }}

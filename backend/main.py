@@ -14,8 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-router = APIRouter(prefix="/weather-app/api")
-
 def get_icon(description: str):
     desc = description.lower()
     if 'cloud' in desc: return '☁️'
@@ -56,7 +54,7 @@ def geocode(address: str):
         print(f"[geocode error] {e}")
     return None, None, None
 
-@router.get("/weather")
+@app.get("/weather")
 def weather(
     query: str = Query(default=None, description="Địa chỉ hoặc thành phố"),
     city: str = Query(default=None, description="Tương thích tham số cũ")
@@ -93,9 +91,6 @@ def weather(
         print(f"[weather fetch error] {e}")
         return {"error": "Không tìm thấy dữ liệu thời tiết phù hợp"}
 
-@router.get("/health")
+@app.get("/health")
 async def health():
     return {"status": "ok"}
-
-# Đăng ký router vào FastAPI app
-app.include_router(router)

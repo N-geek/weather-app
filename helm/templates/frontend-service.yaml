@@ -2,10 +2,18 @@ apiVersion: v1
 kind: Service
 metadata:
   name: weather-frontend-svc
+  annotations:
+    {{- with .Values.frontend.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
 spec:
+  type: {{ .Values.frontend.service.type }}
+  externalTrafficPolicy: {{ .Values.frontend.service.externalTrafficPolicy }}
   selector:
     app: weather-frontend
   ports:
-  - port: 80
-    targetPort: {{ .Values.frontend.port }}
-  type: ClusterIP
+    - name: http
+      port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.port }}

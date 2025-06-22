@@ -13,22 +13,22 @@ spec:
         app: weather-frontend
     spec:
       containers:
-      - name: frontend
-        image: {{ .Values.frontend.image }}
-        readinessProbe:
-          httpGet:
-            path: /health.html
-            port: 80
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /health.html
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 15
-          failureThreshold: 5
-        ports:
-        - containerPort: {{ .Values.frontend.port }}
-        resources: {{- toYaml .Values.frontend.resources | nindent 10 }}
+        - name: frontend
+          image: {{ .Values.frontend.image }}
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          readinessProbe:
+            httpGet:
+              path: /health.html
+              port: {{ .Values.frontend.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health.html
+              port: {{ .Values.frontend.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 5
+          resources: {{- toYaml .Values.frontend.resources | nindent 12 }}

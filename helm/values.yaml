@@ -17,6 +17,10 @@ backend:
     type: LoadBalancer
     port: 5000
     externalTrafficPolicy: Cluster
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+      service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-04f2dc2e663bdb3d3,subnet-0bce2b9230c94a80c"
 
 frontend:
   image: ngeek4geek/weather-app-frontend:latest
@@ -32,28 +36,10 @@ frontend:
     type: LoadBalancer
     port: 80
     externalTrafficPolicy: Cluster
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+      service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-04f2dc2e663bdb3d3,subnet-0bce2b9230c94a80c"
 
 ingress:
-  enabled: true
-  className: alb
-  annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-  hosts:
-    - host: "*"
-      paths:
-        - path: /weather-app/
-          pathType: Prefix
-          backend:
-            service:
-              name: weather-frontend-svc
-              port:
-                number: 80
-        - path: /weather-app/api/
-          pathType: Prefix
-          backend:
-            service:
-              name: weather-backend-svc
-              port:
-                number: 5000
+  enabled: false
