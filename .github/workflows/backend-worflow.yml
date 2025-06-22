@@ -87,4 +87,5 @@ jobs:
 
       - name: Test backend calls backend correctly
         run: |
+          sleep 10
           curl --fail $BACKEND_URL:5000/weather?query=London
