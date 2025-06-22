@@ -85,9 +85,6 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.13.3
-      
-      - name: Verify image exists on DockerHub
-        run: docker pull $IMAGE_NAME:$IMAGE_TAG
 
       - name: Upgrade Helm Chart
         run: |
@@ -97,8 +94,8 @@ jobs:
           --wait \
           --atomic \
           --timeout 20m \
-          --set backend.image.repository=$IMAGE_NAME \
-          --set backend.image.tag=$IMAGE_TAG
+          --set frontend.image.repository=$IMAGE_NAME \
+          --set frontend.image.tag=$IMAGE_TAG
 
       - name: Test frontend calls backend correctly
         run: |
