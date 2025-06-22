@@ -8,6 +8,7 @@ A fullstack weather application built with **FastAPI** (Python backend), **React
 - 📦 Backend with FastAPI
 - 💻 Frontend with React + Vite
 - 🐳 Docker + Helm + K8s
+- ☁️ AWS (EC2 + EKS + IAM + VPC)
 - ✅ CI/CD with GitHub Actions
 - 🔐 Prometheus + Grafana
 
