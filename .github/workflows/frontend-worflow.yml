@@ -13,7 +13,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
           IMAGE_NAME:  ngeek4geek/weather-app-frontend
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: v1.${{ github.run_number }}
     
         steps:
         - name: Checkout sourcode
@@ -56,7 +56,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         IMAGE_NAME:  ngeek4geek/weather-app-frontend
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: v1.${{ github.run_number }}
         AWS_REGION: us-east-1
         AWS_CLUSTER: weather-app-cluster
 
@@ -85,6 +85,9 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.13.3
+      
+      - name: Verify image exists on DockerHub
+        run: docker pull $IMAGE_NAME:$IMAGE_TAG
 
       - name: Upgrade Helm Chart
         run: |
@@ -92,6 +95,7 @@ jobs:
           --install \
           --namespace default \
           --wait \
+          --atomic \
           --timeout 20m \
           --set backend.image.repository=$IMAGE_NAME \
           --set backend.image.tag=$IMAGE_TAG
