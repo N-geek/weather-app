@@ -6,7 +6,7 @@ on:
     paths:
       - 'frontend/**'
       - 'helm/**'
-      - '.github/workflow/frontend*'
+      - '.github/workflows/frontend*'
 
 jobs:
     build:
