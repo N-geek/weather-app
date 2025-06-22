@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 import requests, os
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from starlette.responses import Response
+from starlette.requests import Request
 
 load_dotenv()
 app = FastAPI()
@@ -94,3 +97,16 @@ def weather(
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+REQUEST_COUNTER = Counter("weather_requests_total", "Total weather requests", ["endpoint"])
+
+@app.middleware("http")
+async def prometheus_middleware(request: Request, call_next):
+    if request.url.path == "/weather":
+        REQUEST_COUNTER.labels(endpoint="/weather").inc()
+    response = await call_next(request)
+    return response
+
+@app.get("/metrics")
+def metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)

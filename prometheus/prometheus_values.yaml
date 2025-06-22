@@ -1,0 +1,58 @@
+serviceAccounts:
+  server:
+    create: false
+    name: amp-iamproxy-serviceaccount
+
+  alertmanager:
+    create: true
+    name: prometheus-alertmanager
+
+  pushgateway:
+    create: true
+
+  nodeExporter:
+    create: true
+
+alertmanager:
+  enabled: true
+  service:
+    type: ClusterIP
+  persistentVolume:
+    enabled: true
+    storageClass: ebs-sc
+    size: 2Gi
+
+pushgateway:
+  enabled: true
+  service:
+    type: ClusterIP
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
+
+server:
+  service:
+    type: ClusterIP
+    port: 9090
+
+  persistentVolume:
+    enabled: true
+    storageClass: ebs-sc
+    size: 8Gi
+
+  remoteWrite:
+    - url: https://aps-workspaces.us-east-1.amazonaws.com/workspaces/ws-fb37613a-1abc-47c8-991a-232a38b03201/api/v1/remote_write
+      sigv4:
+        region: us-east-1
+      queue_config:
+        max_samples_per_send: 1000
+        max_shards: 200
+        capacity: 2500
+
+  extraScrapeConfigs:
+    - job_name: 'weather-backend'
+      static_configs:
+        - targets: ['weather-backend-svc.default.svc.cluster.local:5000']
