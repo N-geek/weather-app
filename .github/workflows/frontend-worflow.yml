@@ -74,6 +74,17 @@ jobs:
       - name: Setup kubectl
         run: |
           aws eks update-kubeconfig --name $AWS_CLUSTER --region $AWS_REGION
+          
+      - name: Get frontend external URL
+        id: get-ip
+        run: |
+          export URL=$(kubectl get svc weather-frontend-svc -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "frontend_url=http://$URL" >> $FRONTEND_URL_OUTPUT
+      
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.3
 
       - name: Upgrade Helm Chart
         run: |
@@ -83,13 +94,7 @@ jobs:
           --wait \
           --timeout 20m \
           --set backend.image.repository=$IMAGE_NAME \
-          -set backend.image.tag=$IMAGE_TAG \
-
-      - name: Get frontend external URL
-        id: get-ip
-        run: |
-          export URL=$(kubectl get svc weather-frontend-svc -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "frontend_url=http://$URL" >> $FRONTEND_URL_OUTPUT
+          --set backend.image.tag=$IMAGE_TAG
 
       - name: Test frontend calls backend correctly
         run: |
