@@ -54,18 +54,36 @@ jobs:
     deploy:
       needs: build
       runs-on: ubuntu-latest
+      env:
+        IMAGE_NAME:  ngeek4geek/weather-app-frontend
+        IMAGE_TAG: ${{ github.sha }}
+        AWS_REGION: us-east-1
+        AWS_CLUSTER: weather-app-cluster
 
       steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
       - name: Setup kubectl
         run: |
-          aws eks update-kubeconfig --name weather-app-cluster --region us-east-1
+          aws eks update-kubeconfig --name $AWS_CLUSTER --region $AWS_REGION
 
       - name: Upgrade Helm Chart
         run: |
-          helm upgrade weather ./helm --install --namespace default --wait --timeout 10m
+          helm upgrade weather ./helm \
+          --install \
+          --namespace default \
+          --wait \
+          --timeout 20m \
+          --set backend.image.repository=$IMAGE_NAME \
+          -set backend.image.tag=$IMAGE_TAG \
 
       - name: Get frontend external URL
         id: get-ip
