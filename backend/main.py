@@ -60,7 +60,7 @@ def geocode(address: str):
 @app.get("/weather")
 def weather(
     query: str = Query(default=None, description="Address of street or city"),
-    city: str = Query(default=None, description="Name of city")
+    city: str = Query(default=None, description="Name of city or town")
 ):
     api_key = os.getenv("WEATHER_API")
     user_input = query or city
