@@ -1,15 +1,16 @@
 # 🌤️ Weather Information App
 
-A fullstack weather application built with **FastAPI** (Python backend), **React** (frontend), **Tailwind CSS**, Docker, and GitHub Actions CI/CD. Weather data is fetched from [OpenWeatherMap](https://openweathermap.org/api).
+http://k8s-default-weatherf-e138165e28-dc680244ba4d34b4.elb.us-east-1.amazonaws.com/
 
 ## ⚙️ Features
 
-- 🔁 Get current weather data via city name
+- 🔁 Get current weather data via street or city name
 - 📦 Backend with FastAPI
-- 💻 Frontend with React + TailwindCSS
-- 🐳 Dockerized with docker-compose
+- 💻 Frontend with React + Vite
+- 🐳 Docker + Helm + K8s
+- ☁️ AWS (EC2 + EKS + IAM + VPC)
 - ✅ CI/CD with GitHub Actions
-- 🔐 Secrets managed via `.env`
+- 🔐 Prometheus + Grafana
 
 ---
 
@@ -22,7 +23,7 @@ git clone https://github.com/your-username/weather-app.git
 cd weather-app
 ```
 
-### 2️. Clone the Repo
+### 2️. Get weather information
 Create a .env file in both the root
 
 ```bash
@@ -97,3 +98,35 @@ Go to this page https://app.docker.com/settings/personal-access-tokens
 # 4. Update CI to authetication and push image to that repo
 ```
 ![image](https://github.com/user-attachments/assets/c31985eb-8f47-4df9-9189-b70b68a85b65)
+
+### 5. Weather application Result
+http://k8s-default-weatherf-e138165e28-dc680244ba4d34b4.elb.us-east-1.amazonaws.com/
+
+![image](https://github.com/user-attachments/assets/86df2aec-1ab0-444a-8390-545e7bd90656)
+
+API website
+
+http://k8s-default-weatherb-bb74c8ea9e-ed149abdef235d52.elb.us-east-1.amazonaws.com:5000/weather?query=London
+{
+  "location": "London, Greater London, Anh, Vương quốc Anh",
+  "temp": 23,
+  "description": "few clouds",
+  "icon": "☁️"
+}
+
+![image](https://github.com/user-attachments/assets/1c8524cb-02a3-4a2f-b0e5-edfd0a89a8ce)
+
+Prometheus
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090
+http://localhost:9090/
+
+![image](https://github.com/user-attachments/assets/8c634bb9-c420-4687-8ab8-495f9dde84e1)
+
+
+Grafana
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+http://localhost:3000/
+
+![image](https://github.com/user-attachments/assets/ee2f7e0a-8f27-4931-85d7-cd0619a0c8cf)
+
+
